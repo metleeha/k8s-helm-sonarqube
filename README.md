@@ -19,7 +19,6 @@
 ### postgreSQL 설치 values.yaml 파일 설정
 ### Sonarqube 설치 values.yaml 파일 설정
 1. pvc 이름 변경
-2. NodePort 번호 변경
 
 
 ## Postgre
@@ -46,14 +45,6 @@ helm3 버전 체크
 ```bash
 helm version
 ```
-helm repo 추가 (생략 가능)
-```bash
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-```
-차트 리스트 출력해서 확인 
-```bash
-helm search repo stable
-```
 helm repo 업데이트 
 ```bash
 helm repo update
@@ -74,7 +65,6 @@ helm install [labXX]-postgresql bitnami/postgresql -f values.yaml
 helm repo add oteemo https://oteemo.github.io/charts/
 helm install [labXX]-sonarqube oteemo/sonarqube -f values.yaml
 ```
-#### 실행 결과창
 
 ## Sonarqube 설치 확인 및 로그인
 설치된 Sonarqube 컨테이너의 Node Export IP Adress에 설정한 nodePort 번호를 붙여 접속
