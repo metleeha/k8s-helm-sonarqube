@@ -21,10 +21,8 @@ elasticsearch:
   configureNode: true
   bootstrapChecks: true
 
-nodePort: 32088
-
 service:
-  type: ClusterIP
+  type: NodePort
   externalPort: 9000
   internalPort: 9000
   labels:

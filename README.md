@@ -63,10 +63,19 @@ helm install [labXX]-postgresql bitnami/postgresql -f values.yaml
 ### `./sonarqube/` helm 으로 Sonarqube 설치 실행 
 ```bash
 helm repo add oteemo https://oteemo.github.io/charts/
-helm install [labXX]-sonarqube oteemo/sonarqube -f values.yaml
+helm install [labXX] oteemo/sonarqube -f values.yaml
 ```
 
 ## Sonarqube 설치 확인 및 로그인
-설치된 Sonarqube 컨테이너의 Node Export IP Adress에 설정한 nodePort 번호를 붙여 접속
-예시 : `https://[Node Export IP]:[3200XX]`
+설치된 서비스의 포트 번호 확인 
+```bash
+kubectl get svc 
+```
+```bash
+kubectl get svc [labXX]-sonarqube --output yaml
+```
+노드 정보 확인 
+- kubernetes dashboard 포드 정보 > Node 주소 클릭 > Export IP Adress 확인 
+
+예시 : `https://[Node Export IP]:[32XXX]`
 명령어로 찾은 password를 사용해 admin으로 로그인 
