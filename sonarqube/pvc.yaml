@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: hdlee-sonarqube-pvc
+  name: lab99-sonarqube-pvc
   labels:
     type: sonarqube
 spec:

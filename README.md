@@ -1,41 +1,92 @@
 # Install Sonarqube on Kubernetes Cluster (Helm ver.3)
 
-## 선행 조건
-- IBM Cloud login
-    ```bash
-    ibmcloud login --sso
-    ibmcloud target -g klab-cloud-academy
-    # ibm cloud cluster 대시보드에서 CLI 접속 토큰 확인
-    ibmcloud ks cluster config --cluster [TOKEN]
-    ```
-- Kubernetes Cluster 네임스페이스 생성
-    ```bash
-    kubectl create namespace [labXX]
-    ```
-- Kubernetes Cluster 네임스페이스 기본 설정 
-    ```bash
-    kubectl config set-context --current --namespace=[labXX]
-    ```
-### postgreSQL 설치 values.yaml 파일 설정
-### Sonarqube 설치 values.yaml 파일 설정
-1. pvc 이름 변경
+## git clone
+git을 로컬에 복제합니다. 
+아래 명령어를 수행하시면 됩니다. 
+```bash
+git clone http://9.21.104.136:8001/root/k8s-sonarqube.git
+```
+## IBM Cloud Login
+IBM Cloud에 로그인 합니다.
+Acacemy 교육시 수행한 핸즈온 문서를 참조 합니다.
 
+## Kubernetes Cluster에 네임스페이스 생성
+namespace는 본인에게 주어진 번호를 사용하여 labXX로 생성합니다.
+예를들어 본인의 번호가 99번의 경우 lab99 을 사용 합니다.
+```bash
+kubectl create namesapce lab99
+```
 
 ## Postgre
 ### PostgreSQL PV 생성
+복제한 git 폴더에서 pv.yaml을 열어서 아래 부분을 수정 합니다.
+pv생성시 사용하는 pv명은 `lab99`-postgre-pv 로 prefix만 수정합니다.(중요)
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: lab99-postgre-pv # modify
+  namespace: lab99 # modify
+  labels:
+    type: postgre
+```
+수정을 완료 하였으면 다시한번 `labXX` 규칙에 맞게 수정하였는지 확인합니다.
+확인 완료 후 아래 명령을 수행 합니다.
 ```bash
 kubectl create -f pv.yaml
 ```
+
 ### PostgreSQL PVC 생성
+복제한 git 폴더에서 pvc.yaml을 열어서 아래 부분을 수정 합니다.
+pcc명은 `lab99`-postgre-pvc 로 prefix만 수정 합니다. (중요)
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lab99-postgre-pvc # modify
+  namespace: lab99 # modify
+  labels:
+    type: postgre
+```
+수정을 완료 하였으면 다시한번 labXX 규칙에 맞게 수정하였는지 확인합니다.
+확인 완료 후 아래 명령을 수행 합니다.
 ```bash
 kubectl create -f pvc.yaml
 ```
+
 ## Sonarqube
 ### Sonarqube PV 생성
+복제한 git 폴더에서 pv.yaml을 열어서 아래 부분을 수정 합니다.
+pv생성시 사용하는 pv명은 `lab99`-sonarqube-pv 로 prefix만 수정합니다.(중요)
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: lab99-sonarqube-pv # modify
+  namespace: lab99 # modify
+  labels:
+    type: sonarqube
+```
+수정을 완료 하였으면 다시한번 `labXX` 규칙에 맞게 수정하였는지 확인합니다.
+확인 완료 후 아래 명령을 수행 합니다.
 ```bash
 kubectl create -f pv.yaml
 ```
+
 ### Sonarqube PVC 생성
+복제한 git 폴더에서 pvc.yaml을 열어서 아래 부분을 수정 합니다.
+pcc명은 `lab99`-sonarqube-pvc 로 prefix만 수정 합니다. (중요)
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lab99-sonarqube-pvc # modify
+  namespace: lab99 # modify
+  labels:
+    type: sonarqube
+```
+수정을 완료 하였으면 다시한번 labXX 규칙에 맞게 수정하였는지 확인합니다.
+확인 완료 후 아래 명령을 수행 합니다.
 ```bash
 kubectl create -f pvc.yaml
 ```
@@ -54,10 +105,6 @@ helm repo update
 ```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install [labXX]-postgresql bitnami/postgresql -f values.yaml
-```
-#### 실행 결과창
-```bash
-
 ```
 
 ### `./sonarqube/` helm 으로 Sonarqube 설치 실행 
