@@ -166,3 +166,14 @@ Sonarqube url is http://169.56.75.43:31108/login
 ID is admin
 admin passwd is admin
 ```
+
+## 삭제하기   
+삭제하는 명령입니다.   
+삭제시 설정한 정보가 모두 사라지니 주의 하여 주세요.   
+다른 사람의 리소스를 삭제하지 않도록 반드시 본인의 리소스를 확인 후 삭제하여 주세요.    
+```bash
+helm delete --purge lab99-sonarqube
+kubectl delete -f pvc.yaml 
+kubectl delete -f pv.yaml 
+
+```
