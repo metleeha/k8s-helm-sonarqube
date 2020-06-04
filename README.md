@@ -102,27 +102,67 @@ helm repo update
 ```
 
 ### `./postgre/` helm으로 postgreSQL 설치 실행
+리파지토리 추가   
+helm 리파지토리를 추가 합니다.   
 ```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install [labXX]-postgresql bitnami/postgresql -f values.yaml
+helm repo add bitnami https://charts.bitnami.com/bitnami=
 ```
+postgreSQL 설치   
+helm 이름을 수정합니다. ```lab99```-postgre 의 prefix만 수정합니다.(중요)   
+persistence.existingClaim 의 값을 생성한 pvc로 수정합니다. ```lab99```-postgre-pvc 에서 prefix만 수정합니다.(중요)   
+namespace를 수정합니다.(중요)   
+3개의 정보를 규칙에 따라 수정 하였으면, 다시 한번 수정된 내용을 확인하고 콘솔창에서 수정한 명령을 실행 합니다.   
+```bash
+helm install --name lab99-postgre stable/postgresql \
+--set persistence.existingClaim=lab99-postgre-pvc \
+--set persistence.enabled=false  \
+--set postgresqlUsername=sonarUser  \
+--set postgresqlPassword=sonarPass  \
+--set postgresqlDatabase=sonarDB  \
+--namespace lab99 
+
+```
+
 
 ### `./sonarqube/` helm 으로 Sonarqube 설치 실행 
+리파지토리 추가   
+helm 리파지토리를 추가 합니다.   
 ```bash
 helm repo add oteemo https://oteemo.github.io/charts/
-helm install [labXX] oteemo/sonarqube -f values.yaml
 ```
+
+sonarqube 설치   
+helm 이름을 수정합니다. ```lab99```-sonarqube의 prefix만 수정합니다.(중요)   
+postgresql.postgresqlServer 의 값을 수정합니다. ```lab99```-postgre-postgresql 에서 prefix만 수정합니다.(중요)   
+namespace를 수정합니다.(중요)   
+3개의 정보를 규칙에 따라 수정 하였으면, 다시 한번 수정된 내용을 확인하고 콘솔창에서 수정한 명령을 실행 합니다.   
+```bash
+helm install --name lab99-sonarqube oteemo/sonarqube \
+--set postgresql.postgresqlServer=lab99-postgre-postgresql  \
+--set service.type=NodePort  \
+--set postgresql.enabled=false  \
+--set postgresql.postgresqlUsername=sonarUser  \
+--set postgresql.postgresqlPassword=sonarPass  \
+--set postgresql.postgresqlDatabase=sonarDB  \
+--namespace lab99
+```
+
 
 ## Sonarqube 설치 확인 및 로그인
-설치된 서비스의 포트 번호 확인 
+show_url.sh 파일에 실행 권한을 줍니다.  
 ```bash
-kubectl get svc 
+chmod 750 show_url.sh
 ```
+명령어를 수행할때 입력값으로 네임스페이스 명을 사용합니다.
+url 접속정보, 계정, 패스워드를 출력해 줍니다.   
 ```bash
-kubectl get svc [labXX]-sonarqube --output yaml
+./show_url.sh lab99
 ```
-노드 정보 확인 
-- kubernetes dashboard 포드 정보 > Node 주소 클릭 > Export IP Adress 확인 
-
-예시 : `https://[Node Export IP]:[32XXX]`
-명령어로 찾은 password를 사용해 admin으로 로그인 
+콘솔 화면에 다음과 깉이 출력 됩니다.   
+pod가 생성되는데 수분의 시간이 걸립니다. 
+pod가 생성 완료 되었는지 확인 한 후 아래 url정보를 복사하여 브라우저에서 실행 합니다.    
+```console
+Sonarqube url is http://169.56.75.43:31108/login
+ID is admin
+admin passwd is admin
+```
