@@ -1,7 +1,8 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: lab99-sonarqube-pvc
+  name: demo-sonarqube-pvc
+  namespace: sonar-demo
   labels:
     type: sonarqube
 spec:
